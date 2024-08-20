@@ -150,92 +150,92 @@ while balance <= 0:
     else:
         print("Please enter a valid amount.")
 
-while balance > 0:
-    # Get the bet amount
-    bet = 0
-    while bet <= 0 or bet > balance:
-        bet = input(f"Your balance is ${balance}. How much would you like to bet?: $")
-        if bet.isdigit():
-            bet = int(bet)
-            if bet > balance:
-                print(f"You cannot bet more than your balance of ${balance}.")
-            elif bet <= 0:
-                print("Please enter a positive amount.")
-        else:
-            print("Please enter a valid amount.")
+    while balance > 0:
+        # Get the bet amount
+        bet = 0
+        while bet <= 0 or bet > balance:
+            bet = input(f"Your balance is ${balance}. How much would you like to bet?: $")
+            if bet.isdigit():
+                bet = int(bet)
+                if bet > balance:
+                    print(f"You cannot bet more than your balance of ${balance}.")
+                elif bet <= 0:
+                    print("Please enter a positive amount.")
+            else:
+                print("Please enter a valid amount.")
 
-    balance -= bet
-    print(f"You bet ${bet}. Remaining balance: ${balance}")
+        balance -= bet
+        print(f"You bet ${bet}. Remaining balance: ${balance}")
 
-    # Shuffle and deal cards
-    random.shuffle(cards)
-    dealer_cards = random.sample(cards, 2)
-    player_cards = random.sample(cards, 2)
-    dealer_value = calculate_hand_value(dealer_cards)
-    player_value = calculate_hand_value(player_cards)
+        # Shuffle and deal cards
+        random.shuffle(cards)
+        dealer_cards = random.sample(cards, 2)
+        player_cards = random.sample(cards, 2)
+        dealer_value = calculate_hand_value(dealer_cards)
+        player_value = calculate_hand_value(player_cards)
 
-    print(f"The Dealers's cards are {dealer_cards} and their value is {dealer_value}.")
-    time.sleep(2)
-    print(f"The Player's cards are {player_cards} and their value is {player_value}.")
-    time.sleep(2)
+        print(f"The Dealers's cards are {dealer_cards} and their value is {dealer_value}.")
+        time.sleep(2)
+        print(f"The Player's cards are {player_cards} and their value is {player_value}.")
+        time.sleep(2)
 
-    if dealer_value == 21:
-        print("Dealer has Blackjack! You lose.")
-        continue
-    if player_value == 21:
-        print("Player has Blackjack! You win!")
-        balance += bet * 2.5
-        continue
+        if dealer_value == 21:
+            print("Dealer has Blackjack! You lose.")
+            continue
+        if player_value == 21:
+            print("Player has Blackjack! You win!")
+            balance += bet * 2.5
+            continue
 
-    # Player's turn
-    while player_value < 21:
-        valid_ans1 = ("a", "b")
-        ans1 = ""
-        while ans1 not in valid_ans1:
-            ans1 = input(
-                f"Your card value is {player_value}. Would you like to Hit or Stand? \n(a) HIT \n(b) STAND\nYour Choice: "
-            )
-        if ans1 == "a":
-            hit = random.sample(cards, 1)[0]
-            player_cards.append(hit)
-            player_value = calculate_hand_value(player_cards)
-            print(f"Your cards are {player_cards} and their value is {player_value}")
-            if player_value > 21:
-                print("You bust! The Dealer wins.")
+        # Player's turn
+        while player_value < 21:
+            valid_ans1 = ("a", "b")
+            ans1 = ""
+            while ans1 not in valid_ans1:
+                ans1 = input(
+                    f"Your card value is {player_value}. Would you like to Hit or Stand? \n(a) HIT \n(b) STAND\nYour Choice: "
+                )
+            if ans1 == "a":
+                hit = random.sample(cards, 1)[0]
+                player_cards.append(hit)
+                player_value = calculate_hand_value(player_cards)
+                print(f"Your cards are {player_cards} and their value is {player_value}")
+                if player_value > 21:
+                    print("You bust! The Dealer wins.")
+                    break
+            elif ans1 == "b":
+                print(f"Player chooses to stand. Your card value is {player_value}.")
                 break
-        elif ans1 == "b":
-            print(f"Player chooses to stand. Your card value is {player_value}.")
-            break
 
-    # Dealer's turn
-    if player_value <= 21:
-        while dealer_value < 18:
-            hit = random.sample(cards, 1)[0]
-            dealer_cards.append(hit)
-            dealer_value = calculate_hand_value(dealer_cards)
-            print(
-                f"Dealer's cards are {dealer_cards} and their value is {dealer_value}."
-            )
-            time.sleep(2)
-            if dealer_value > 21:
-                print("Dealer busts! You win.")
+        # Dealer's turn
+        if player_value <= 21:
+            while dealer_value < 18:
+                hit = random.sample(cards, 1)[0]
+                dealer_cards.append(hit)
+                dealer_value = calculate_hand_value(dealer_cards)
+                print(
+                    f"Dealer's cards are {dealer_cards} and their value is {dealer_value}."
+                )
+                time.sleep(2)
+                if dealer_value > 21:
+                    print("Dealer busts! You win.")
+                    balance += bet * 2
+                    break
+
+        # Determine winner if both player and dealer are under 21
+        if player_value <= 21 and dealer_value <= 21:
+            if player_value > dealer_value:
                 balance += bet * 2
-                break
+                print(f"You win! Your balance is now ${balance}.")
+            elif player_value < dealer_value:
+                print(f"You lose! Your balance is now ${balance}.")
+            else:
+                balance += bet
+                print(f"It's a tie! You get your bet back. Your balance is ${balance}.")
 
-    # Determine winner if both player and dealer are under 21
-    if player_value <= 21 and dealer_value <= 21:
-        if player_value > dealer_value:
-            balance += bet * 2
-            print(f"You win! Your balance is now ${balance}.")
-        elif player_value < dealer_value:
-            print(f"You lose! Your balance is now ${balance}.")
-        else:
-            balance += bet
-            print(f"It's a tie! You get your bet back. Your balance is ${balance}.")
-
-    # Check if player wants to continue or quit
-    play = ""
-    while play not in valid_play:
-        play = input("Do you want to play again? (y/n): ")
-        if play == "n":
-            quit()
+        # Check if player wants to continue or quit
+        play = ""
+        while play not in valid_play:
+            play = input("Do you want to play again? (y/n): ")
+            if play == "n":
+                quit()
